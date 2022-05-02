@@ -1,6 +1,7 @@
 package hu.bme.mit.train.controller;
 
 import hu.bme.mit.train.interfaces.TrainController;
+import java.lang.Thread;
 
 public class TrainControllerImpl implements TrainController {
 
@@ -43,7 +44,32 @@ public class TrainControllerImpl implements TrainController {
 
 	@Override
 	public void setJoystickPosition(int joystickPosition) {
-		this.step = joystickPosition;		
+		this.step = joystickPosition;
+		if (joystickPosition !=  0)
+			 new SpeedThread((joystickPosition>0));
+	}
+
+	public class SpeedThread extends Thread{
+
+		Boolean increase = true;
+		public SpeedThread(boolean b) {
+			this.increase = b;
+		}
+
+	   @Override
+	   public void run() {
+			if(increase)
+				referenceSpeed++;
+			else
+				referenceSpeed--;
+				try {
+					sleep(1000);
+				} catch (Exception e) {
+					//TODO: handle exception
+				}
+				
+		   super.run();
+	   } 
 	}
 
 }
